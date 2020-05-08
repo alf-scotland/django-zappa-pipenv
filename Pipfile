@@ -7,8 +7,9 @@ verify_ssl = true
 
 [packages]
 zappa = "*"
-django = "*"
 python-dotenv = "*"
+django = "*"
+django-storages = "*"
 
 [requires]
 python_version = "3.7"
