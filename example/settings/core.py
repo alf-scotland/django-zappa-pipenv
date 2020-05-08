@@ -16,7 +16,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = Path(__file__).absolute().parent.parent
+BASE_DIR = Path(__file__).absolute().parent.parent.parent
 
 # Load local environment variables
 load_dotenv(BASE_DIR / '.env')

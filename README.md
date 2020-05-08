@@ -40,7 +40,13 @@ Status for example-dev:
         Event Rule ARN:       arn:aws:events:eu-central-1:012345:rule/example-dev-zappa-keep-warm-handler.keep_warm_callback
 ```
 
-Use the `API Gateway URL` domain and set it as an environment variable on the Lambda console for the variable `ALLOWED_HOST`.
+Use the `API Gateway URL` domain and set it as an environment variable on the Lambda console for the variable `ALLOWED_HOST`. Furthermore, you need to set the bucket name where to serve your static files via `AWS_STORAGE_BUCKET_NAME`. For simplicity, you can use the one used by `zappa`.
+
+And to make sure you have your static files served, call:
+
+```bash
+zappa manage dev "collectstatic --noinput"
+```
 
 **Done!**
 
@@ -74,15 +80,27 @@ Then create an app:
 python manage.py startapp app
 ```
 
-And link the app in the config as well as make sure that `python-dotenv` can get to work.
+To maintain sanity over different settings, the original `example/settings.py` is organized in a settings package.
+
+First, link the app in the config:
 
 ```python
-# example/settings.py
+INSTALLED_APPS = [
+    'app.apps.AppConfig',
+    ...
+]
+```
+
+As well as make sure that `python-dotenv` can get to work.
+
+```python
+# example/settings/core.py
 
 from dotenv import load_dotenv  # right after import os
 from pathlib import Path
 
 # replace BASE_DIR with
+# if the original settings structure is kept remove one `.parent`.
 BASE_DIR = Path(__file__).absolute().parent.parent
 
 # And add a line to load environment variables
@@ -102,3 +120,11 @@ DATABASES = {
     }
 }
 ```
+
+Once the basic settings are made one has to provide an adequate storage environemnt. This example is based on [django-storages](https://django-storages.readthedocs.io).
+
+Create a configuration for [Amazon S3](https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html) using again `python-dotenv` (see `example/settings/storage.py`).
+
+## Next steps
+
+- Include how to connect to a database, e.g. Amazon Aurora.
